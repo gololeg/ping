@@ -2,11 +2,15 @@ package ru.test.ping.db;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import ru.test.ping.entities.Operation;
+import ru.test.ping.entities.Status;
 import ru.test.ping.repo.OperationRepository;
 import ru.test.ping.repo.StatusRepository;
 
@@ -27,5 +31,22 @@ class OperationTest {
             .build());
     Operation dbOperation = operationRepository.getReferenceById(op.getId());
     Assertions.assertEquals(op.getDomain(), dbOperation.getDomain());
+  }
+
+  @Test
+  @Transactional
+  void paging() {
+    for (int i = 0; i < 11; i++) {
+      operationRepository.save(
+          Operation.builder().domain("domain").createDate(LocalDateTime.now())
+              .status(statusRepository.getReferenceById(1))
+              .build());
+    }
+    Assertions.assertEquals(5,
+        operationRepository.findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusIn(
+            "",LocalDateTime.now().minusSeconds(2), LocalDateTime.now(), List.of(Status.builder()
+                .id(1).build()),
+            PageRequest.of(1, 5)).getContent().size());
+
   }
 }
