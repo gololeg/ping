@@ -6,18 +6,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.test.ping.entity.Operation;
+import ru.test.ping.entity.Status;
+import ru.test.ping.repo.OperationRepository;
 import ru.test.ping.service.OperationService;
 
 @Controller
 public class OperationController {
 
-  public OperationController(OperationService operationService) {
+  public OperationController(OperationService operationService, OperationRepository operationRepository) {
+    this.operationRepository = operationRepository;
     this.operationService = operationService;
   }
 
+  private OperationRepository operationRepository;
   private OperationService operationService;
 
   @GetMapping("/operations")
@@ -41,6 +48,53 @@ public class OperationController {
     }
 
     return "operations";
+  }
+
+  @GetMapping("/operations/{id}")
+  public String editOperation(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      Operation operation = operationRepository.findById(id).get();
+
+      model.addAttribute("operation", operation);
+      model.addAttribute("pageTitle", "Edit Operation (ID: " + id + ")");
+
+      return "operation_form";
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("message", e.getMessage());
+
+      return "redirect:/operations";
+    }
+  }
+
+  @DeleteMapping("/operations/{id}")
+  public String deleteOperation(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+    try {
+      operationRepository.deleteById(id);
+
+      redirectAttributes.addFlashAttribute("message", "The Operation with id=" + id + " has been deleted successfully!");
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("message", e.getMessage());
+    }
+
+    return "redirect:/operations";
+  }
+
+  @GetMapping("/operations/{id}/run")
+  public String run(@PathVariable("id") Long id,
+      Model model, RedirectAttributes redirectAttributes) {
+    try {
+      Operation operation = operationRepository.findById(id).get();
+      operation.setStatus(Status.builder().id(1).build());
+      operationRepository.save(operation);
+
+      String message = "The Tutorial id=" + id + " has been run";
+
+      redirectAttributes.addFlashAttribute("message", message);
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("message", e.getMessage());
+    }
+
+    return "redirect:/operations";
   }
 
 }
