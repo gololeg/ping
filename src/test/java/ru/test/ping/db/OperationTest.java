@@ -2,15 +2,14 @@ package ru.test.ping.db;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import ru.test.ping.entities.Operation;
-import ru.test.ping.entities.Status;
+import ru.test.ping.entity.Operation;
+import ru.test.ping.entity.Status;
 import ru.test.ping.repo.OperationRepository;
 import ru.test.ping.repo.StatusRepository;
 

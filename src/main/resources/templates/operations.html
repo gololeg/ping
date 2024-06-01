@@ -37,7 +37,7 @@
         <div class="col-md-6 mt-2">
           <div class="search">
             <i class="fa fa-search"></i>
-            <input id="domain" type="search" name="domain" th:value="${domain}" required
+            <input id="domain" type="search" name="domain" th:value="${params.domain}" required
                    class="form-control"
                    placeholder="Enter domain">
             <button type="submit" class="btn btn-secondary">Search</button>
@@ -50,7 +50,7 @@
           <select form="searchForm" name="size" th:value="${pageSize}" onchange="changePageSize()"
                   class="size-select"
                   id="pageSize">
-            <option th:each="s : ${ {3, 6, 9} }" th:value="${s}" th:text="${s}"
+            <option th:each="s : ${ {5} }" th:value="${s}" th:text="${s}"
                     th:selected="${s == pageSize}"></option>
           </select>
         </div>

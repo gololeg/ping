@@ -1,38 +1,41 @@
 package ru.test.ping;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.test.ping.entities.Operation;
-import ru.test.ping.entities.Status;
+import ru.test.ping.entity.Operation;
+import ru.test.ping.service.OperationService;
 
 @Controller
 public class OperationController {
 
+  public OperationController(OperationService operationService) {
+    this.operationService = operationService;
+  }
+
+  private OperationService operationService;
+
   @GetMapping("/operations")
-  public String getAll(Model model, @RequestParam(required = false) String domain,
+  public String getAll(Model model,
+      ParamsRequestOperation params,
       @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
     try {
-      List<Operation> operations = new ArrayList<>();
-      for(int i=0;i<11;i++){
-        operations.add(Operation.builder().domain("domain" +i).createDate(LocalDateTime.now())
-                .status(Status.builder().name("Test").build())
-                .result("res")
-            .build());
-      }
       Pageable paging = PageRequest.of(page - 1, size);
 
+      Page<Operation> pageOperations = operationService.findAll(params, paging);
+      List<Operation> operations = pageOperations.getContent();
+
       model.addAttribute("operations", operations);
-      model.addAttribute("currentPage", 1);
-      model.addAttribute("totalItems", 5);
-      model.addAttribute("totalPages", 3);
+      model.addAttribute("currentPage", pageOperations.getNumber() + 1);
+      model.addAttribute("totalItems", pageOperations.getTotalElements());
+      model.addAttribute("totalPages", pageOperations.getTotalPages());
       model.addAttribute("pageSize", size);
+      model.addAttribute("params", params == null ? new ParamsRequestOperation() : params);
     } catch (Exception e) {
       model.addAttribute("message", e.getMessage());
     }

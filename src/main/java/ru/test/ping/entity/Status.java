@@ -1,4 +1,4 @@
-package ru.test.ping.entities;
+package ru.test.ping.entity;
 
 
 import jakarta.persistence.Column;
