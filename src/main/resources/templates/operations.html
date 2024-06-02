@@ -55,7 +55,7 @@
           </select>
         </div>
         <div class="col-md-1 mt-2">
-          <button id="btnClear" class="btn btn-info">Clear</button>
+          <button id="btnClear" class="btn btn-info">New operation</button>
         </div>
       </div>
     </form>
@@ -160,9 +160,7 @@
       });
 
       $("#btnClear").on("click", function (e) {
-        e.preventDefault();
-        $("#keyword").text("");
-        window.location = "[[@{/operations}]]";
+        window.location.href = "/operations/new";
       });
     });
 

@@ -115,5 +115,27 @@ public class OperationController {
     return "operation_form";
   }
 
+  @GetMapping("/operations/new")
+  public String newOperation(Model model) {
 
+    model.addAttribute("operation", new Operation());
+    return "new_operation_form";
+  }
+  @PostMapping(value = "/operations/new")
+  public String newOp(Operation operation,
+      Model model, RedirectAttributes redirectAttributes) {
+    try {
+      operation.setStatus(Status.STATUS_1);
+      operation.setCreateDate(LocalDateTime.now());
+      operationRepository.save(operation);
+
+      String message = "The operation domain=" + operation.getDomain() + " has been saved";
+
+      redirectAttributes.addFlashAttribute("message", message);
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("message", e.getMessage());
+    }
+
+    return "redirect:/operations";
+  }
 }
