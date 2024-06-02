@@ -10,6 +10,8 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
   <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
   <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+  <script src="/app.js"></script>
 </head>
 
 <body>
@@ -43,8 +45,8 @@
 
 
         <div class="text-center">
-          <input type="submit" value="Run" class="btn btn-primary btn-sm mr-2" />
-          <input type="button" value="Cancel" id="btnCancel" class="btn btn-secondary btn-sm" />
+          <input type="submit" value="Save" class="btn btn-primary btn-sm mr-2" />
+          <input type="button" value="Run" id="btnCancel" class="btn btn-secondary btn-sm" />
         </div>
       </div>
     </form>
@@ -54,12 +56,16 @@
 <div th:replace="fragments/footer :: footer"></div>
 
 <script type="text/javascript">
+connect();
     $(document).ready(function () {
       $("#btnCancel").on("click", function () {
-        window.location = "[[@{/tutorials}]]";
+      sendName();
+
+        //window.location = "[[@{/tutorials}]]";
       });
     });
   </script>
+
 
 </body>
 
