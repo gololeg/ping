@@ -42,7 +42,7 @@ class OperationTest {
               .build());
     }
     Assertions.assertEquals(5,
-        operationRepository.findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusIn(
+        operationRepository.findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusInOrderByCreateDateDesc(
             "",LocalDateTime.now().minusSeconds(2), LocalDateTime.now(), List.of(Status.builder()
                 .id(1).build()),
             PageRequest.of(1, 5)).getContent().size());

@@ -45,9 +45,9 @@ function disconnect() {
 function sendName() {
     stompClient.publish({
         destination: "/app/ping",
-        body: 'dom.de'//JSON.stringify({'name': $("#name").val()})
+        body: $("#title").val()//JSON.stringify({'name': $("#name").val()})
     });
-}
+}opera_
 
 function showPing(message) {
     $("#description").val($("#description").val() + message + "\n");

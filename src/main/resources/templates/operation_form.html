@@ -21,7 +21,7 @@
   <h2 class="text-center">[[${pageTitle}]]</h2>
 
   <div class="my-3">
-    <form th:action="@{/operations}" method="post" enctype="multipart/form-data" th:object="${operation}"
+    <form action="/operations" method="post"  th:object="${operation}"
           style="max-width: 550px; margin: 0 auto">
 
       <input type="hidden" th:field="*{id}" />
@@ -59,6 +59,7 @@
 connect();
     $(document).ready(function () {
       $("#btnCancel").on("click", function () {
+      $("#description").val("")
       sendName();
 
         //window.location = "[[@{/tutorials}]]";

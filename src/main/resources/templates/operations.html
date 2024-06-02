@@ -69,6 +69,7 @@
         <th scope="col">CreateDate</th>
         <th scope="col">Status</th>
         <th scope="col">Result</th>
+        <th scope="col">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -77,6 +78,13 @@
         <td>[[${operation.createDate}]]</td>
         <td>[[${operation.status.name}]]</td>
         <td>[[${operation.result}]]</td>
+        <td>
+          <a th:href="@{'/operations/' + ${operation.id}}" title="Edit this operation"
+             class="fa-regular fa-pen-to-square icon-dark"></a>
+          &nbsp;
+          <a th:href="@{'/operations/delete/' + ${operation.id}}" th:tutorialTitle="${operation.domain}" id="btnDelete"
+             title="Delete this operation" class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+        </td>
       </tr>
       </tbody>
     </table>

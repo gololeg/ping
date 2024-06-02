@@ -23,8 +23,8 @@ public class OperationService {
     String domain = params.getDomain() == null ? "" : params.getDomain();
     LocalDateTime start = LocalDateTime.now().minusYears(100);
     LocalDateTime end = LocalDateTime.now();
-    List<Status> statuses = List.of(Status.builder().id(1).build());
-    return operationRepository.findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusIn(
+    List<Status> statuses = List.of(Status.STATUS_1, Status.STATUS_2, Status.STATUS_3);
+    return operationRepository.findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusInOrderByCreateDateDesc(
         domain, start, end, statuses, pageable
 
     );

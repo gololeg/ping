@@ -10,7 +10,8 @@ import ru.test.ping.entity.Status;
 
 public interface OperationRepository extends JpaRepository<Operation, Long> {
 
-  Page<Operation> findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusIn(String domain,
+  Page<Operation> findByDomainContainingIgnoreCaseAndCreateDateBetweenAndStatusInOrderByCreateDateDesc(
+      String domain,
       LocalDateTime start, LocalDateTime end, List<Status> statuses, Pageable pageable);
 
 }
