@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Status {
 
-  public static Status STATUS_1 = Status.builder().id(1).build();
-  public static Status STATUS_2 = Status.builder().id(2).build();
-  public static Status STATUS_3 = Status.builder().id(3).build();
+  public static final Status STATUS_RUNNABLE = Status.builder().id(1).build();
+  public static final Status STATUS_RUNNING = Status.builder().id(2).build();
+  public static final Status STATUS_COMPLITED = Status.builder().id(3).build();
   @Id
   private int id;
 

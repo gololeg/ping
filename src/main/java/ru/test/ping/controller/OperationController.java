@@ -1,4 +1,4 @@
-package ru.test.ping;
+package ru.test.ping.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.test.ping.params.ParamsRequestOperation;
 import ru.test.ping.entity.Operation;
 import ru.test.ping.entity.Status;
 import ru.test.ping.repo.OperationRepository;
@@ -21,6 +22,9 @@ import ru.test.ping.service.OperationService;
 @Controller
 public class OperationController {
 
+private static final String MESSAGE = "message";
+  private static final String OPERATION = "operation";
+  private static final String REDIRECT_OPERATIONS = "redirect:/operations";
   public OperationController(OperationService operationService,
       OperationRepository operationRepository) {
     this.operationRepository = operationRepository;
@@ -47,7 +51,7 @@ public class OperationController {
       model.addAttribute("pageSize", size);
       model.addAttribute("params", params == null ? new ParamsRequestOperation() : params);
     } catch (Exception e) {
-      model.addAttribute("message", e.getMessage());
+      model.addAttribute(MESSAGE, e.getMessage());
     }
 
     return "operations";
@@ -57,16 +61,16 @@ public class OperationController {
   public String editOperation(@PathVariable("id") Long id, Model model,
       RedirectAttributes redirectAttributes) {
     try {
-      Operation operation = operationRepository.findById(id).get();
+      Operation operation = operationRepository.getReferenceById(id);
 
-      model.addAttribute("operation", operation);
+      model.addAttribute(OPERATION, operation);
       model.addAttribute("pageTitle", "Edit Operation (ID: " + id + ")");
 
       return "operation_form";
     } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("message", e.getMessage());
+      redirectAttributes.addFlashAttribute(MESSAGE, e.getMessage());
 
-      return "redirect:/operations";
+      return REDIRECT_OPERATIONS;
     }
   }
 
@@ -76,41 +80,41 @@ public class OperationController {
     try {
       operationRepository.deleteById(id);
 
-      redirectAttributes.addFlashAttribute("message",
+      redirectAttributes.addFlashAttribute(MESSAGE,
           "The Operation with id=" + id + " has been deleted successfully!");
     } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("message", e.getMessage());
+      redirectAttributes.addFlashAttribute(MESSAGE, e.getMessage());
     }
 
-    return "redirect:/operations";
+    return REDIRECT_OPERATIONS;
   }
 
   @PostMapping(value = "/operations")
   public String edit(Operation operation,
       Model model, RedirectAttributes redirectAttributes) {
     try {
-      Operation operationDB = operationRepository.findById(operation.getId()).get();
-      operationDB.setStatus(Status.STATUS_3);
+      Operation operationDB = operationRepository.getReferenceById(operation.getId());
+      operationDB.setStatus(Status.STATUS_COMPLITED);
       operationDB.setResult(operation.getResult());
       operationDB.setCreateDate(LocalDateTime.now());
       operationRepository.save(operationDB);
 
       String message = "The operation id=" + operation.getId() + " has been saved";
 
-      redirectAttributes.addFlashAttribute("message", message);
+      redirectAttributes.addFlashAttribute(MESSAGE, message);
     } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("message", e.getMessage());
+      redirectAttributes.addFlashAttribute(MESSAGE, e.getMessage());
     }
 
-    return "redirect:/operations";
+    return REDIRECT_OPERATIONS;
   }
 
   @PatchMapping(value = "/operations/{id}")
   public String editStatus(Model model, @PathVariable("id") Long id) {
-    Operation operationDB = operationRepository.findById(id).get();
-    operationDB.setStatus(Status.STATUS_2);
+    Operation operationDB = operationRepository.getReferenceById(id);
+    operationDB.setStatus(Status.STATUS_RUNNING);
     operationRepository.save(operationDB);
-    model.addAttribute("operation", operationDB);
+    model.addAttribute(OPERATION, operationDB);
 
     return "operation_form";
   }
@@ -118,24 +122,24 @@ public class OperationController {
   @GetMapping("/operations/new")
   public String newOperation(Model model) {
 
-    model.addAttribute("operation", new Operation());
+    model.addAttribute(OPERATION, new Operation());
     return "new_operation_form";
   }
   @PostMapping(value = "/operations/new")
   public String newOp(Operation operation,
       Model model, RedirectAttributes redirectAttributes) {
     try {
-      operation.setStatus(Status.STATUS_1);
+      operation.setStatus(Status.STATUS_RUNNABLE);
       operation.setCreateDate(LocalDateTime.now());
       operationRepository.save(operation);
 
       String message = "The operation domain=" + operation.getDomain() + " has been saved";
 
-      redirectAttributes.addFlashAttribute("message", message);
+      redirectAttributes.addFlashAttribute(MESSAGE, message);
     } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("message", e.getMessage());
+      redirectAttributes.addFlashAttribute(MESSAGE, e.getMessage());
     }
 
-    return "redirect:/operations";
+    return REDIRECT_OPERATIONS;
   }
 }

@@ -1,4 +1,4 @@
-package ru.test.ping.websocket;
+package ru.test.ping.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

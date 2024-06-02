@@ -1,4 +1,4 @@
-package ru.test.ping;
+package ru.test.ping.params;
 
 import lombok.Data;
 
