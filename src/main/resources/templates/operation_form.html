@@ -25,6 +25,7 @@
           style="max-width: 550px; margin: 0 auto">
 
       <input type="hidden" th:field="*{id}" />
+      <input type="hidden" th:field="*{status.id}" id="statusId" />
 
       <div class="p-3">
         <div class="form-group row">
@@ -57,9 +58,21 @@
 
 <script type="text/javascript">
 connect();
+  if(statusId.value == 2){
+    setTimeout(() => {sendName()},200)
+  }
     $(document).ready(function () {
       $("#btnCancel").on("click", function () {
-      $("#description").val("")
+      $("#description").val("");
+      fetch('/operations/' + id.value, {
+method: 'PATCH',
+headers: {
+'Content-Type': 'application/json',
+},
+})
+.then(res => res)
+.then(data => console.log(data))
+.catch(error => console.error('Error patching data:', error));
       sendName();
 
         //window.location = "[[@{/tutorials}]]";

@@ -47,7 +47,7 @@ function sendName() {
         destination: "/app/ping",
         body: $("#title").val()//JSON.stringify({'name': $("#name").val()})
     });
-}opera_
+}
 
 function showPing(message) {
     $("#description").val($("#description").val() + message + "\n");

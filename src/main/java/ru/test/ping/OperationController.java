@@ -1,18 +1,16 @@
 package ru.test.ping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.test.ping.entity.Operation;
@@ -23,7 +21,8 @@ import ru.test.ping.service.OperationService;
 @Controller
 public class OperationController {
 
-  public OperationController(OperationService operationService, OperationRepository operationRepository) {
+  public OperationController(OperationService operationService,
+      OperationRepository operationRepository) {
     this.operationRepository = operationRepository;
     this.operationService = operationService;
   }
@@ -55,7 +54,8 @@ public class OperationController {
   }
 
   @GetMapping("/operations/{id}")
-  public String editOperation(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+  public String editOperation(@PathVariable("id") Long id, Model model,
+      RedirectAttributes redirectAttributes) {
     try {
       Operation operation = operationRepository.findById(id).get();
 
@@ -70,12 +70,14 @@ public class OperationController {
     }
   }
 
-  @DeleteMapping("/operations/delete/{id}")
-  public String deleteOperation(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+  @GetMapping("/operations/delete/{id}")
+  public String deleteOperation(@PathVariable("id") Long id, Model model,
+      RedirectAttributes redirectAttributes) {
     try {
       operationRepository.deleteById(id);
 
-      redirectAttributes.addFlashAttribute("message", "The Operation with id=" + id + " has been deleted successfully!");
+      redirectAttributes.addFlashAttribute("message",
+          "The Operation with id=" + id + " has been deleted successfully!");
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("message", e.getMessage());
     }
@@ -88,8 +90,9 @@ public class OperationController {
       Model model, RedirectAttributes redirectAttributes) {
     try {
       Operation operationDB = operationRepository.findById(operation.getId()).get();
-      operationDB.setStatus(Status.builder().id(3).build());
+      operationDB.setStatus(Status.STATUS_3);
       operationDB.setResult(operation.getResult());
+      operationDB.setCreateDate(LocalDateTime.now());
       operationRepository.save(operationDB);
 
       String message = "The operation id=" + operation.getId() + " has been saved";
@@ -101,5 +104,16 @@ public class OperationController {
 
     return "redirect:/operations";
   }
+
+  @PatchMapping(value = "/operations/{id}")
+  public String editStatus(Model model, @PathVariable("id") Long id) {
+    Operation operationDB = operationRepository.findById(id).get();
+    operationDB.setStatus(Status.STATUS_2);
+    operationRepository.save(operationDB);
+    model.addAttribute("operation", operationDB);
+
+    return "operation_form";
+  }
+
 
 }
