@@ -37,9 +37,21 @@
         <div class="col-md-6 mt-2">
           <div class="search">
             <i class="fa fa-search"></i>
-            <input id="domain" type="search" name="domain" th:value="${params.domain}" required
+            <input id="domain" type="search" name="domain" th:value="${params.domain}"
                    class="form-control"
                    placeholder="Enter domain">
+            <input id="dateFrom" class="form-control" type="date"
+                   th:value="${params.dateFrom}"
+                   name="dateFrom"/>
+            <input id="dateTo" class="form-control" type="date"
+                   th:value="${params.dateTo}"
+                   name="dateTo"/>
+            <select  name="statusId" id="statusId" th:value="${params.statusId}">
+              <option value="0" >Все</option>
+              <option value="1" th:selected="${params.statusId == 1}">Запланирован</option>
+              <option value="2" th:selected="${params.statusId == 2}">Выполняется</option>
+              <option value="3" th:selected="${params.statusId == 3}">Завершен</option>
+            </select>
             <button type="submit" class="btn btn-secondary">Search</button>
           </div>
         </div>
